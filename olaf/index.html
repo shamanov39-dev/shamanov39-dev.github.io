@@ -125,14 +125,8 @@ a{color:var(--accent)}
 </ol>
 
 <h2>Файлы</h2>
-<table><tr><th>Файл</th><th>Для кого</th><th>Размер</th></tr>
-<tr><td><a href="olaf_base.mov">olaf_base.mov</a> / <a href="olaf_pro.mov">olaf_pro.mov</a></td><td>Safari на Mac, iPhone, iPad</td><td>≈2 МБ</td></tr>
-<tr><td><a href="olaf_base.webm">olaf_base.webm</a> / <a href="olaf_pro.webm">olaf_pro.webm</a></td><td>Chrome, Firefox, Edge, Android</td><td>≈2,6 МБ</td></tr>
-<tr><td><a href="olaf_poster.png">olaf_poster.png</a></td><td>первый кадр, пока видео грузится</td><td>0,2 МБ</td></tr>
-<tr><td><a href="olaf_base_check.mp4">olaf_base_check.mp4</a> / <a href="olaf_pro_check.mp4">olaf_pro_check.mp4</a></td><td>контроль на зелёном фоне, любой плеер</td><td>≈3 МБ</td></tr>
-</table>
-<p class="note" style="margin-top:10px">Ролик 656×1170, 11,8 с. Персонаж в конце не возвращается в стартовую позу, поэтому цикл собран проигрыванием вперёд-назад. Если на сайте фигура показывается не шире 480 px, вес можно уменьшить примерно вдвое.</p>
-
+<p>Для каждого ролика отдаю: .mov (HEVC с альфой) для Safari и iPhone, .webm (VP9 с альфой) для остальных браузеров, PNG первого кадра и контрольный mp4 на зелёном фоне. Файлы передаются при старте заказа.</p>
+<p class="note">Ролик 656×1170, 11,8 с, .mov около 1,8 МБ, .webm около 2,4 МБ. Персонаж в конце не возвращается в стартовую позу, поэтому цикл собран проигрыванием вперёд-назад. Если на сайте фигура показывается не шире 480 px, вес можно уменьшить примерно вдвое.</p>
 <h2>Код вставки на сайт</h2>
 <pre>&lt;video autoplay muted loop playsinline poster="olaf_poster.png"&gt;
   &lt;source src="olaf.mov" type='video/mp4; codecs="hvc1"'&gt;
