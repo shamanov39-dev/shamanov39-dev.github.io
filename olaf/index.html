@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Olaf: тест прозрачного видео</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+:root{--bg:#eef3f8;--bg2:#ffffff;--ink:#16212b;--muted:#5b6b7a;--line:#cfdae5;--accent:#2f8fd0;--accent-ink:#fff;--ok:#1f8a4c;--warn:#b8641a;--code:#f3f7fb}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1720;--bg2:#17222d;--ink:#e8eef4;--muted:#93a3b3;--line:#2a3a4a;--accent:#5fb3ec;--accent-ink:#0b1420;--ok:#4fc27d;--warn:#e69a4a;--code:#0b121a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,sans-serif;font-size:15px;line-height:1.5}
+main{max-width:1040px;margin:0 auto;padding:28px 20px 60px}
+h1{font-weight:800;font-size:clamp(24px,4vw,34px);margin:0 0 6px;letter-spacing:-.01em}
+.lead{color:var(--muted);max-width:62ch;margin:0 0 22px}
+.stage{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg2)}
+.canvas{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:20px;transition:background .25s}
+.tier{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0}
+.tier video{width:100%;max-width:300px;height:auto;display:block;filter:drop-shadow(0 18px 24px rgba(0,0,0,.25))}
+.tag{display:inline-flex;gap:8px;align-items:baseline;background:rgba(0,0,0,.55);color:#fff;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700;backdrop-filter:blur(6px)}
+.tag b{font-size:15px}
+.canvas.g1{background:linear-gradient(160deg,#1a3f7a,#2d7fb8 55%,#f0b04a)}
+.canvas.g2{background:#fff}.canvas.g2 .tag{background:rgba(0,0,0,.75)}
+.canvas.g3{background:#0b0f14}
+.canvas.g4{background-color:#d9d9d9;background-image:linear-gradient(45deg,#bbb 25%,transparent 25%),linear-gradient(-45deg,#bbb 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#bbb 75%),linear-gradient(-45deg,transparent 75%,#bbb 75%);background-size:24px 24px;background-position:0 0,0 12px,12px -12px,-12px 0}
+.canvas.g5{background:radial-gradient(circle at 30% 20%,#ffe9a8,#ff8c69 45%,#7a2e8e)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 16px;border-top:1px solid var(--line)}
+.bar span{color:var(--muted);font-size:13px;margin-right:4px}
+button{font:inherit;font-weight:700;font-size:13px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg2);color:var(--ink);cursor:pointer}
+button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin:20px 0}
+.card{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--bg2)}
+.card h3{margin:0 0 4px;font-size:17px}
+.price{font-size:22px;font-weight:800;margin:0 0 8px}.price small{font-size:13px;color:var(--muted);font-weight:500}
+.card ul{margin:0;padding-left:18px;color:var(--ink)}.card li{margin:3px 0}
+.card.pro{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 25%,transparent)}
+.status{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0}
+.st{padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg2)}
+.st b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.st .v{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:13px;word-break:break-all}
+.ok{color:var(--ok)}.warn{color:var(--warn)}
+h2{font-size:18px;margin:28px 0 8px}
+p{max-width:65ch}ol{padding-left:20px;max-width:65ch}li{margin:4px 0}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12.5px;line-height:1.55}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px}
+td,th{text-align:left;padding:6px 14px 6px 0;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+a{color:var(--accent)}
+.note{font-size:13px;color:var(--muted)}
+@media (max-width:640px){.canvas{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.canvas{transition:none}}
+</style></head><body><main>
+<h1>Olaf: тест прозрачного видео</h1>
+<p class="lead">Один и тот же исходник, обработанный в двух вариантах. Оба лежат поверх подложки страницы без собственного фона. Переключайте подложку и сравнивайте края, волосы и щели между руками и туловищем.</p>
+
+<div class="stage">
+ <div class="canvas g1" id="canvas">
+  <div class="tier">
+   <span class="tag">Базовый <b>400 ₽</b>/ролик</span>
+   <video id="v1" autoplay muted loop playsinline poster="olaf_poster.png">
+    <source src="olaf_base.mov" type='video/mp4; codecs="hvc1"'>
+    <source src="olaf_base.webm" type="video/webm">
+   </video>
+  </div>
+  <div class="tier">
+   <span class="tag">Чистовой <b>650 ₽</b>/ролик</span>
+   <video id="v2" autoplay muted loop playsinline poster="olaf_poster.png">
+    <source src="olaf_pro.mov" type='video/mp4; codecs="hvc1"'>
+    <source src="olaf_pro.webm" type="video/webm">
+   </video>
+  </div>
+ </div>
+ <div class="bar"><span>Подложка:</span>
+  <button data-bg="g1" aria-pressed="true">Градиент</button>
+  <button data-bg="g5" aria-pressed="false">Закат</button>
+  <button data-bg="g2" aria-pressed="false">Белая</button>
+  <button data-bg="g3" aria-pressed="false">Чёрная</button>
+  <button data-bg="g4" aria-pressed="false">Шахматка</button>
+ </div>
+</div>
+
+<div class="tiers">
+ <div class="card">
+  <h3>Базовый</h3>
+  <p class="price">400 ₽ <small>за ролик · 60 роликов за 4–5 рабочих дней</small></p>
+  <ul>
+   <li>Быстрая нейросетевая маска, чистые внешние края и тонкие детали вроде волосков</li>
+   <li>Бесшовный цикл, два формата с прозрачностью, постер, код вставки</li>
+   <li>Мелкие щели между частями тела (подмышки) могут местами подсвечиваться</li>
+  </ul>
+ </div>
+ <div class="card pro">
+  <h3>Чистовой</h3>
+  <p class="price">650 ₽ <small>за ролик · 60 роликов за 8–10 рабочих дней</small></p>
+  <ul>
+   <li>Точная модель, считает в 15 раз дольше: вычищены щели, тени в них и полупрозрачные зоны</li>
+   <li>Ручная проверка каждого ролика покадрово в зонах риска</li>
+   <li>Всё из базового тарифа</li>
+  </ul>
+ </div>
+ <div class="card">
+  <h3>Сложные ролики</h3>
+  <p class="price">отдельно <small>после просмотра исходника</small></p>
+  <ul>
+   <li>Распущенные волосы, мех, стекло, дым, прозрачные ткани</li>
+   <li>Пёстрый или движущийся фон, фон по цвету близкий к объекту</li>
+   <li>Скажу честно, что получится, до начала работы</li>
+  </ul>
+ </div>
+</div>
+
+<div class="status">
+ <div class="st"><b>Браузер выбрал</b><div class="v" id="src">определяю…</div></div>
+ <div class="st"><b>HEVC с альфой (Safari, iOS)</b><div class="v" id="hevc">…</div></div>
+ <div class="st"><b>VP9 с альфой (Chrome, Android)</b><div class="v" id="vp9">…</div></div>
+</div>
+
+<h2>Что проверить на iPhone</h2>
+<ol>
+ <li>Откройте эту страницу в Safari. Видео должно запуститься само, без кнопки Play, и крутиться по кругу.</li>
+ <li>Переключите подложки: фигуры везде без рамки и заливки.</li>
+ <li>В поле «Браузер выбрал» должно быть <code>video/mp4</code>. Это HEVC-alpha .mov, специальный формат для Safari.</li>
+</ol>
+
+<h2>Файлы</h2>
+<table><tr><th>Файл</th><th>Для кого</th><th>Размер</th></tr>
+<tr><td><a href="olaf_base.mov">olaf_base.mov</a> / <a href="olaf_pro.mov">olaf_pro.mov</a></td><td>Safari на Mac, iPhone, iPad</td><td>≈2 МБ</td></tr>
+<tr><td><a href="olaf_base.webm">olaf_base.webm</a> / <a href="olaf_pro.webm">olaf_pro.webm</a></td><td>Chrome, Firefox, Edge, Android</td><td>≈2,6 МБ</td></tr>
+<tr><td><a href="olaf_poster.png">olaf_poster.png</a></td><td>первый кадр, пока видео грузится</td><td>0,2 МБ</td></tr>
+<tr><td><a href="olaf_base_check.mp4">olaf_base_check.mp4</a> / <a href="olaf_pro_check.mp4">olaf_pro_check.mp4</a></td><td>контроль на зелёном фоне, любой плеер</td><td>≈3 МБ</td></tr>
+</table>
+<p class="note" style="margin-top:10px">Ролик 656×1170, 11,8 с. Персонаж в конце не возвращается в стартовую позу, поэтому цикл собран проигрыванием вперёд-назад. Если на сайте фигура показывается не шире 480 px, вес можно уменьшить примерно вдвое.</p>
+
+<h2>Код вставки на сайт</h2>
+<pre>&lt;video autoplay muted loop playsinline poster="olaf_poster.png"&gt;
+  &lt;source src="olaf.mov" type='video/mp4; codecs="hvc1"'&gt;
+  &lt;source src="olaf.webm" type="video/webm"&gt;
+&lt;/video&gt;</pre>
+<p>Порядок важен: .mov первым, иначе Safari возьмёт .webm без прозрачности. Атрибуты <code>muted</code> и <code>playsinline</code> обязательны, без них iPhone не запустит видео автоматически.</p>
+</main>
+<script>
+(function(){
+ var v=document.getElementById('v1'),c=document.getElementById('canvas');
+ document.querySelectorAll('.bar button').forEach(function(b){b.addEventListener('click',function(){
+  c.className='canvas '+b.dataset.bg;
+  document.querySelectorAll('.bar button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});
+ })});
+ function mark(id,r){var e=document.getElementById(id);e.textContent=r?('да ('+r+')'):'нет';e.className='v '+(r?'ok':'warn')}
+ mark('hevc',v.canPlayType('video/mp4; codecs="hvc1"'));
+ mark('vp9',v.canPlayType('video/webm; codecs="vp9"'));
+ function show(){var s=v.currentSrc||'';var t=/\.mov(\?|$)/.test(s)?'video/mp4 (HEVC alpha .mov)':(/\.webm(\?|$)/.test(s)?'video/webm (VP9 .webm)':'не выбран');document.getElementById('src').textContent=t}
+ v.addEventListener('loadedmetadata',show);setTimeout(show,1500);
+ ['v1','v2'].forEach(function(id){var e=document.getElementById(id);e.play().catch(function(){})});
+})();
+</script>
+</body></html>
