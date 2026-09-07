@@ -45,6 +45,7 @@ td,th{text-align:left;padding:6px 14px 6px 0;border-bottom:1px solid var(--line)
 th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
 a{color:var(--accent)}
 .note{font-size:13px;color:var(--muted)}
+.pending{background:rgba(0,0,0,.6);color:#fff;padding:10px 14px;border-radius:10px;font-size:13px;max-width:300px;text-align:center}
 @media (max-width:640px){.canvas{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.canvas{transition:none}}
 </style></head><body><main>
@@ -66,6 +67,7 @@ a{color:var(--accent)}
     <source src="olaf_pro.mov" type='video/mp4; codecs="hvc1"'>
     <source src="olaf_pro.webm" type="video/webm">
    </video>
+   <div id="pending" class="pending" hidden>Чистовой вариант ещё обрабатывается точной моделью. Обновите страницу через 20–30 минут.</div>
   </div>
  </div>
  <div class="bar"><span>Подложка:</span>
@@ -149,6 +151,8 @@ a{color:var(--accent)}
  function show(){var s=v.currentSrc||'';var t=/\.mov(\?|$)/.test(s)?'video/mp4 (HEVC alpha .mov)':(/\.webm(\?|$)/.test(s)?'video/webm (VP9 .webm)':'не выбран');document.getElementById('src').textContent=t}
  v.addEventListener('loadedmetadata',show);setTimeout(show,1500);
  ['v1','v2'].forEach(function(id){var e=document.getElementById(id);e.play().catch(function(){})});
+ var v2=document.getElementById('v2'),pend=document.getElementById('pending');
+ fetch('olaf_pro.webm',{method:'HEAD'}).then(function(r){if(!r.ok){pend.hidden=false;v2.hidden=true}}).catch(function(){pend.hidden=false;v2.hidden=true});
 })();
 </script>
 </body></html>
